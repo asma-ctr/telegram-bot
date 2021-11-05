@@ -1,0 +1,37 @@
+
+const API = "Past YOUR API KEY HERE";
+ 
+const App_link = "https://script.google.com/macros/s/AKfycbxi8wSW_NtJmzdyTNhk7tx_EywyhKlsaEo304Jw95oYr8utG6h_5eD29SGXq_AI8B1B/exec";
+//förnyas efter varje Deploy
+ 
+function send (msg, chat_id) {
+  let payload = {
+  'method': 'sendMessage',
+  'chat_id': String(chat_id),
+  'text': msg,
+  'parse_mode': 'HTML'
+  }
+  let data = {
+    "method": "post",
+    "payload": payload
+  }
+    UrlFetchApp.fetch('https://api.telegram.org/bot' + API + '/', data);
+}
+ 
+function doPost(e) {
+  let update = JSON.parse(e.postData.contents);
+  
+  if (update.hasOwnProperty('message')) {
+    let msg = update.message;
+    let chat_id = msg.chat.id;
+    let text = msg.text;
+    let user = msg.from.username;
+    if (text == "/hello") {
+      send("Hello World", chat_id)
+    }
+  }
+}
+ 
+function api_connector () {
+  UrlFetchApp.fetch("https://api.telegram.org/bot"+API+"/setWebHook?url="+App_link); 
+}
